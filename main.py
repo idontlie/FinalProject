@@ -2,7 +2,7 @@ import math
 import copy
 from Objects import *
 from GameObject import *
-from tkinter import *
+from tkinter import * 
 
 #model
 def init(data):
