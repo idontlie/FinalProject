@@ -9,16 +9,21 @@ def init(data):
     data.CX = data.width//2
     data.CY = data.height//2
     data.time = 0
-    data.c = Cube(data,Point(0,0,0),"blue",4)
-    data.c0 = Cube(data,Point(4,4,0),"white",4)
-    data.c1 = Cube(data,Point(4,0,4),"white",4)
+    data.gameData = GameObject()
+    data.gameData.addCube(Point(0),4,"blue")
 
 #controller
-def mousePressed(event, data):
-    pass #TODO: Create main menu screen as well as a paused screen
+def mouseMoved(event, data):
+    data.gameData.camera.rx = (event.y-(data.width//2))/100
+    data.gameData.camera.ry = (event.x-(data.height//2))/100
+    #pass #TODO: Create main menu screen as well as a paused screen
 
 def keyPressed(event, data):
-    pass #TODO: Implement character motion
+    if(event.char == "w"):
+        data.gameData.camera.z-= 10
+    if(event.char == "s"):
+        data.gameData.camera.z+= 10
+    #pass #TODO: Implement character motion
 
 def timerFired(data):
     data.time += .01
@@ -28,12 +33,7 @@ def timerFired(data):
 def redrawAll(canvas, data):
     canvas.create_rectangle(0,0,data.width, data.height, fill = "black")
     time = data.time
-    data.c.setAngle(Angle(time, time/2, time))
-    data.c0.setAngle(Angle(time, time/2, time))
-    data.c1.setAngle(Angle(time, time/2, time))
-    data.c.render(canvas,data)
-    data.c0.render(canvas,data)
-    data.c1.render(canvas,data)
+    data.gameData.render(canvas, data, time)
 
 
 
@@ -54,7 +54,9 @@ def run(width=300, height=300):
     def mousePressedWrapper(event, canvas, data):
         mousePressed(event, data)
         redrawAllWrapper(canvas, data)
-
+    def mouseMovedWrapper(event, canvas, data):
+        mouseMoved(event, data)
+        redrawAllWrapper(canvas, data)
     def keyPressedWrapper(event, canvas, data):
         keyPressed(event, data)
         redrawAllWrapper(canvas, data)
@@ -77,8 +79,8 @@ def run(width=300, height=300):
     canvas = Canvas(root, width=data.width, height=data.height)
     canvas.pack()
     # set up events
-    root.bind("<Button-1>", lambda event:
-                            mousePressedWrapper(event, canvas, data))
+    root.bind("<Motion>", lambda event:
+                            mouseMovedWrapper(event, canvas, data))
     root.bind("<Key>", lambda event:
                             keyPressedWrapper(event, canvas, data))
     timerFiredWrapper(canvas, data)
