@@ -9,9 +9,7 @@ def init(data):
     data.CX = data.width//2
     data.CY = data.height//2
     data.time = 0
-    data.c = Cube(data,Point(0,0,0),"blue",4)
-    data.c0 = Cube(data,Point(4,4,0),"white",4)
-    data.c1 = Cube(data,Point(4,0,4),"white",4)
+    data.game = GameObject()
 
 #controller
 def mousePressed(event, data):
@@ -26,17 +24,11 @@ def timerFired(data):
 
 #view
 def redrawAll(canvas, data):
+    clear(canvas, data)
+    data.game.render(canvas, data)
+
+def clear(canvas,data):
     canvas.create_rectangle(0,0,data.width, data.height, fill = "black")
-    time = data.time
-    data.c.setAngle(Angle(time, time/2, time))
-    data.c0.setAngle(Angle(time, time/2, time))
-    data.c1.setAngle(Angle(time, time/2, time))
-    data.c.render(canvas,data)
-    data.c0.render(canvas,data)
-    data.c1.render(canvas,data)
-
-
-
 
 
 ###################################

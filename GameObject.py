@@ -1,10 +1,16 @@
 from Objects import *
 class GameObject(object):
-    def __init__(data):
+    def __init__(self):
         self.visibleItems = []
         self.angle = Angle(0,0,0)
-        self.visibleItems.append(
-            Terrain(data, Point(0,0,0), 50,50, 100, 100, 0, "green")
-        )
-    def addCube(self, x,y,z, size, color, width = 1):
-        self.visibleItems.append(Cube(x,y,z,size,color,width))
+        self.rotVels = Angle(0,0,0) #velocity of rotation for each axis
+        self.rotFriction = .98 #friction coefficient
+
+        #Build the main game Cube
+        #The entire game is rendered inside of this cube
+        self.addCube(Point(0),1,"green")
+    def addCube(self, center, size, color, width = 1):
+        self.visibleItems.append(Cube(center, size,color,width))
+    def render(self, canvas, data):
+        for obj in self.visibleItems:
+            obj.render(canvas,data)

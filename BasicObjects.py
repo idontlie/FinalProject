@@ -11,12 +11,13 @@ class Angle(object):
         self.rx+=rx
         self.ry+=ry
         self.rz+=rz
+#creating an empty point defaults to 0,0,0
+#for added readibilty, use Point(0) instead though
 class Point(object):
-    def __init__(self, x, y, z):
+    def __init__(self, x = 0, y = 0, z = 0):
         self.x = x
         self.y = y
         self.z = z
-
     def rotate(self, angle, center):
         rx, ry, rz = angle.rx, angle.ry, angle.rz
         cx,cy,cz = center.x, center.y, center.z
@@ -66,7 +67,6 @@ class Line(object):
         p2 = Point(self.x1,self.y1,self.z1)
         p1.rotate(angle,center)
         p2.rotate(angle,center)
-        print(type(p1),type(p1.y),type(data.CX))
         canvas.create_line(
         (p1.x*s) + data.CX,
          (p1.y*s) + data.CY,
