@@ -14,12 +14,12 @@ class Lines(object):
 
     def addLine(self, line):
         self.linesList.append(line)
-    def rotateAboutCenter():
+    def rotate():
         for l in self.linesList:
             l.rotateAboutCenter
     def render(self, canvas, data):
         for l in self.linesList:
-            l.oldrender(canvas, data, self.angle, self.center)
+            l.render(canvas, data, self.angle, self.center)
     def setAngle(self,angle):
         self.angle = angle
 
@@ -50,4 +50,4 @@ class Terrain(Lines):
         super().__init__(data, center, color, width)
         for x in range(xRes):
             for y in range(yRes):
-                break #WRITE THE FUCKING CAMERA SCRIPT BEFORE YOU DO THIS DUMBFUCC
+                break 
