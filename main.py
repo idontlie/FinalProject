@@ -27,14 +27,15 @@ def keyRelease(event, data):
     data.chars[event.char] = False
 
 def keyActions(data):
+    if(data.chars['w']):
+        data.game.movCam(Angle(1,0,0))
     if(data.chars['a']):
         data.game.movCam(Angle(0,1,0))
+    if(data.chars['s']):
+        data.game.movCam(Angle(0,0,1))
     if(data.chars['d']):
         data.game.movCam(Angle(0,-1,0))
-    if(data.chars['w']):
-        data.game.movCam(Angle(0,0,1))
-    if(data.chars['s']):
-        data.game.movCam(Angle(0,0,-1))
+
 def timerFired(data):
     keyActions(data)
     data.game.update()
@@ -82,7 +83,7 @@ def run(width=300, height=300):
     data = Struct()
     data.width = width
     data.height = height
-    data.timerDelay = 10 # milliseconds
+    data.timerDelay = 15 # milliseconds
     init(data)
     # create the root and the canvas
     root = Tk()
@@ -100,4 +101,4 @@ def run(width=300, height=300):
     root.mainloop()  # blocks until window is closed
     print("bye!")
 
-run(700, 700)
+run(1024, 768)

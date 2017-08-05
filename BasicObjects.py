@@ -51,7 +51,10 @@ class Point(object):
         yroty = yrotx
         xroty = Point.compRot(xrot, zrotx, ry, "y")
         zroty = Point.compRot(xrot, zrotx, ry, "x")
-        self.x,self.y,self.z = xroty, yroty, zroty
+        s= Point(0,0,1000)
+        dis = math.sqrt((xroty-s.x)**2+(yroty-s.y)**2+(zroty-s.z)**2)
+        s= 1000
+        self.x,self.y,self.z = xroty*(dis/s), yroty*(dis/s), zroty*(dis/s)
 
     def compRot(ymag, xmag, r, type):
         if (type == "y"):
@@ -73,8 +76,8 @@ class Line(object):
     def render(self, canvas, data,cAngle, angle, center):
         p1 = Point(self.x0,self.y0,self.z0)
         p2 = Point(self.x1,self.y1,self.z1)
-        p1.rotate(angle,center)
-        p2.rotate(angle,center)
+        #p1.rotate(angle,center)
+        #p2.rotate(angle,center)
         p1.rotate(cAngle,Point(0))
         p2.rotate(cAngle,Point(0))
         canvas.create_line(

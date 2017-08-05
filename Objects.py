@@ -42,10 +42,19 @@ class Cube(Lines):
         self.addLine(Line(Point( s+x,s+y, -s+z),Point(-s+x,s+y,-s+z), color))
         self.addLine(Line(Point( -s+x,s+y, s+z),Point(-s+x,s+y,-s+z), color))
 class Terrain(Lines):
-    def __init__(self,
-            center, xRes, yRes, xScale, yScale,
-            bumpyness, color, width = 1):
-        super().__init__( center, color, width)
-        for x in range(xRes):
-            for y in range(yRes):
-                break
+    def __init__(self, xSize, ySize, zCoord, devisions, color, width = 1):
+        super().__init__( Point(0,0,0), color, width)
+        z = zCoord; x = xSize; y = ySize
+        xDiv, yDiv = (x/devisions), (y/devisions)
+        for ix in range(-devisions,devisions):
+            self.addLine(
+                Line(
+                    Point(z, y, ix*xDiv), Point(z, -y, ix*xDiv), color
+                )
+            )
+        for iy in range(-devisions,devisions):
+            self.addLine(
+                Line(
+                    Point(z, iy*yDiv, x), Point(z,iy*yDiv, -x), color
+                )
+            )
