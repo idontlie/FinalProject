@@ -15,9 +15,9 @@ class Lines(object):
     def rotate():
         for l in self.linesList:
             l.rotateAboutCenter
-    def render(self, canvas, data):
+    def render(self, canvas, data, angle):
         for l in self.linesList:
-            l.render(canvas, data, self.angle, self.center)
+            l.render(canvas, data, angle, self.angle, self.center)
     def setAngle(self,angle):
         self.angle = angle
 

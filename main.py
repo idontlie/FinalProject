@@ -1,5 +1,6 @@
 import math
 import copy
+import string
 from Objects import *
 from GameObject import *
 from tkinter import *
@@ -10,16 +11,33 @@ def init(data):
     data.CY = data.height//2
     data.time = 0
     data.game = GameObject()
+    data.chars = {"a":False,"d":False}
+    for i in string.printable:
+        data.chars[i] = False
 
 #controller
 def mousePressed(event, data):
     pass #TODO: Create main menu screen as well as a paused screen
 
 def keyPressed(event, data):
-    pass #TODO: Implement character motion
+    data.chars[event.char] = True
 
+    #TODO: Implement character motion
+def keyRelease(event, data):
+    data.chars[event.char] = False
+
+def keyActions(data):
+    if(data.chars['a']):
+        data.game.movCam(Angle(0,1,0))
+    if(data.chars['d']):
+        data.game.movCam(Angle(0,-1,0))
+    if(data.chars['w']):
+        data.game.movCam(Angle(0,0,1))
+    if(data.chars['s']):
+        data.game.movCam(Angle(0,0,-1))
 def timerFired(data):
-    data.time += .01
+    keyActions(data)
+    data.game.update()
 
 
 #view
@@ -34,7 +52,7 @@ def clear(canvas,data):
 ###################################
 ####################################
 # use the run function as-is
-####################################
+###############################
 ####################################
 
 def run(width=300, height=300):
@@ -50,7 +68,9 @@ def run(width=300, height=300):
     def keyPressedWrapper(event, canvas, data):
         keyPressed(event, data)
         redrawAllWrapper(canvas, data)
-
+    def keyReleaseWrapper(event, canvas, data):
+        keyRelease(event, data)
+        redrawAllWrapper(canvas, data)
     def timerFiredWrapper(canvas, data):
         timerFired(data)
         redrawAllWrapper(canvas, data)
@@ -71,8 +91,10 @@ def run(width=300, height=300):
     # set up events
     root.bind("<Button-1>", lambda event:
                             mousePressedWrapper(event, canvas, data))
-    root.bind("<Key>", lambda event:
+    root.bind("<KeyPress>", lambda event:
                             keyPressedWrapper(event, canvas, data))
+    root.bind("<KeyRelease>", lambda event:
+                            keyReleaseWrapper(event, canvas, data))
     timerFiredWrapper(canvas, data)
     # and launch the app
     root.mainloop()  # blocks until window is closed
