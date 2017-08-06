@@ -1,6 +1,33 @@
 import math
 import copy
 
+class Vector(object):
+    def __init__(self, x= 0,y =0 ,z = 0):
+        self.x= x
+        self.y= y
+        self.z= z
+    def add(x,y,z):
+        self.x+=x
+        self.y+=y
+        self.z+=z
+    def __iadd__(self,other):
+        self.x += other.x
+        self.y += other.y
+        self.z += other.z
+        return self
+    def __add__(self,other):
+        return Vector(self.x + other.x,
+        self.y + other.y,
+        self.y + other.y)
+    def __imul__(self,other):
+        self.x *= other
+        self.y *= other
+        self.y *= other
+        return self
+    def __truediv__(self, other):
+        return Vector(self.x / other,
+        self.y / other,
+        self.y / other)
 class Angle(object):
     def __init__(self, rx,ry,rz):
         self.rx= rx
@@ -31,11 +58,9 @@ class Angle(object):
 
 #creating an empty point defaults to 0,0,0
 #for added readibilty, use Point(0) instead though
-class Point(object):
+class Point(Vector):
     def __init__(self, x = 0, y = 0, z = 0):
-        self.x = x
-        self.y = y
-        self.z = z
+        super().__init__(x,y,z)
     def rotate(self, angle, center):
         rx, ry, rz = angle.rx, angle.ry, angle.rz
         cx,cy,cz = center.x, center.y, center.z
@@ -55,31 +80,34 @@ class Point(object):
         dis = math.sqrt((xroty-s.x)**2+(yroty-s.y)**2+(zroty-s.z)**2)
         s= 1000
         self.x,self.y,self.z = xroty*(dis/s), yroty*(dis/s), zroty*(dis/s)
-
+        #self.x,self.y,self.z = xroty*(zroty+600)/600, yroty*(zroty+600)/600, zroty
+        #self.x,self.y,self.z = xroty, yroty, zroty without perspective
     def compRot(ymag, xmag, r, type):
         if (type == "y"):
             return (ymag * math.cos(r)) - (xmag * math.sin(r))
         else:
             return (ymag * math.sin(r)) + (xmag * math.cos(r))
+    def isCollision(self, obj):
+        return obj.isInside(self)
 class Line(object):
     def __init__(self, p1, p2, color):
-        self.x0, self.y0, self.z0 = p1.x, p1.y, p1.z
-        self.x1, self.y1, self.z1 = p2.x, p2.y, p2.z
+        self.p1 = p1
+        self.p2 = p2
         self.color = color
+    def move(self, vector):
+        self.p1 += vector
+        self.p2 += vector
     def rotate(self, angle):
-        p1 = Point(self.x,self.y,self.z)
-        p2 = Point(self.x1,self.y1,self.z1)
-        p1.rotate(angle,center)
-        p2.rotate(angle,center)
-        self.x0, self.y0, self.z0 = p1.x, p1.y, p1.z
-        self.x1, self.y1, self.z1 = p2.x, p2.y, p2.z
-    def render(self, canvas, data,cAngle, angle, center):
-        p1 = Point(self.x0,self.y0,self.z0)
-        p2 = Point(self.x1,self.y1,self.z1)
-        #p1.rotate(angle,center)
-        #p2.rotate(angle,center)
-        p1.rotate(cAngle,Point(0))
-        p2.rotate(cAngle,Point(0))
+        self.p1.rotate(angle, center)
+        self.p2.rotate(angle, center)
+
+    def render(self, canvas, data, angle, center, gameCube):
+        if (self.p1.isCollision(gameCube) or self.p2.isCollision(gameCube)):
+            return
+        p1 = copy.copy(self.p1)
+        p2 = copy.copy(self.p2)
+        p1.rotate(angle,Point(0))
+        p2.rotate(angle,Point(0))
         canvas.create_line(
         (p1.x) + data.CX,
          (p1.y) + data.CY,
@@ -87,7 +115,10 @@ class Line(object):
            (p2.y) + data.CY,
            fill = self.color
            )
-
+    def isCollision(self, obj):
+        if(self.p1.isCollision(obj)): return True
+        if(self.p2.isCollision(obj)): return True
+        return False
 #Testing
 a = Angle(0,0,0)
 b = Angle(1,2,3)

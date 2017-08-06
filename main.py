@@ -1,6 +1,7 @@
 import math
 import copy
 import string
+import time
 from Objects import *
 from GameObject import *
 from tkinter import *
@@ -20,21 +21,22 @@ def mousePressed(event, data):
     pass #TODO: Create main menu screen as well as a paused screen
 
 def keyPressed(event, data):
+    #All keyboard data stored in data.chars dictionary
     data.chars[event.char] = True
 
-    #TODO: Implement character motion
 def keyRelease(event, data):
     data.chars[event.char] = False
 
 def keyActions(data):
     if(data.chars['w']):
         data.game.movCam(Angle(1,0,0))
+        #data.game.moveChar(Vector(1,0,0))
     if(data.chars['a']):
         data.game.movCam(Angle(0,1,0))
     if(data.chars['s']):
-        data.game.movCam(Angle(0,0,1))
-    if(data.chars['d']):
-        data.game.movCam(Angle(0,-1,0))
+        data.game.movCam(Angle(-1,0,0))
+    if(data.chars['d']): pass
+        #data.game.movCam(Angle(0,-1,0))
 
 def timerFired(data):
     keyActions(data)
@@ -68,10 +70,11 @@ def run(width=300, height=300):
 
     def keyPressedWrapper(event, canvas, data):
         keyPressed(event, data)
-        redrawAllWrapper(canvas, data)
+        #redrawAllWrapper(canvas, data) Don't uncomment this. It crashes
     def keyReleaseWrapper(event, canvas, data):
         keyRelease(event, data)
-        redrawAllWrapper(canvas, data)
+        #redrawAllWrapper(canvas, data)
+
     def timerFiredWrapper(canvas, data):
         timerFired(data)
         redrawAllWrapper(canvas, data)
@@ -83,7 +86,7 @@ def run(width=300, height=300):
     data = Struct()
     data.width = width
     data.height = height
-    data.timerDelay = 15 # milliseconds
+    data.timerDelay = 10 # milliseconds
     init(data)
     # create the root and the canvas
     root = Tk()
