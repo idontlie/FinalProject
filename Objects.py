@@ -22,6 +22,7 @@ class Lines(object):
         self.angle = angle
 
 class Character(Lines):
+    jumpHeight = -20
     def __init__(self, pos, size, color, width = 1):
         super().__init__(pos, False, width)
         #Creates all lines in a rectangular prism...
@@ -40,12 +41,17 @@ class Character(Lines):
         self.addLine(Line(Point( s,s, -s),Point(-s,s,-s), color))
         self.addLine(Line(Point( -s,s, s),Point(-s,s,-s), color))
         self.vel = 0
-        self.minPos = pos.x + size
+        self.minPos = pos.x# + (size*2)
         self.gravity = 1
+        self.canJump = True
     def update(self):
         self.pos.x += self.vel
         self.vel += self.gravity
-
+        if(self.pos.x > self.minPos):
+            self.canJump = True
+            self.pos.x = self.minPos
+    def jump(self):
+        self.vel = Character.jumpHeight
 class Cube(Lines):
     def __init__(self, pos, size, color = "green", width = 1):
         super().__init__(pos, True, width)

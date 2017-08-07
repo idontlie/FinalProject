@@ -18,13 +18,15 @@ def init(data):
 
 #controller
 def mousePressed(event, data):
-    pass #TODO: Create main menu screen as well as a paused screen
+    pass #TODO: Create mai n menu screen as well as a paused screen
 
 def keyPressed(event, data):
     #All keyboard data stored in data.chars dictionary
     data.chars[event.char] = True
-    if(event.keysym == "Space"):
+    if(event.char == " "):
         data.game.jumpChar()
+    if(event.char == "z"):
+        data.game.createEnemy()
 
 def keyRelease(event, data):
     data.chars[event.char] = False
