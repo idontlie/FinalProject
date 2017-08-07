@@ -16,12 +16,11 @@ class GameObject(object):
         size = 300 #gameCube size constant
         self.gameCube = GameCube(size,"green")
         self.ground = size-(size/5) #how far the terrain is from the cube
+        devisions = 5 #terrain devisions
+        self.addTerrain(size, self.ground, devisions, "red","blue")
         self.visibleItems.append(
             Character(Point(self.ground,0,-200),20,"White")
-            )
-        devisions = 7 #terrain devisions (/2)
-        self.addTerrain(size, self.ground, devisions, "green")
-
+        )
     def addCube(self, center, size, color, width = 1):
         self.visibleItems.append(Cube(center, size,color,width))
 
