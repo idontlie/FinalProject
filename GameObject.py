@@ -18,9 +18,12 @@ class GameObject(object):
         self.ground = size-(size/5) #how far the terrain is from the cube
         devisions = 5 #terrain devisions
         self.addTerrain(size, self.ground, devisions, "red","blue")
-        self.visibleItems.append(
-            Character(Point(self.ground,0,-200),20,"White")
+        charSize = 20
+
+        self.char = Character(
+            Point(self.ground-charSize,0,-200),charSize,"White"
         )
+
     def addCube(self, center, size, color, width = 1):
         self.visibleItems.append(Cube(center, size,color,width))
 
@@ -36,7 +39,8 @@ class GameObject(object):
     #MODEL FUNCTIONS:
     def moveChar(self, vector):
         self.vel += vector
-
+    def jumpChar(self):
+        self.char.jump()
     def update(self):
         self.pos += self.vel/100
         self.vel *= self.friction
@@ -45,9 +49,11 @@ class GameObject(object):
         for i in range(len(self.visibleItems)):
             if(self.visibleItems[i].isMovable == True):
                 self.visibleItems[i].move(self.vel, self.gameCube)
+        self.char.update()
 
     #VIEW FUNCTIONS:
     def render(self, canvas, data):
         self.gameCube.render(canvas, data, self.angle, self.gameCube)
         for obj in self.visibleItems:
-            obj.render(canvas,data, self.angle, self.gameCube )
+            obj.render(canvas,data, self.angle, self.gameCube)
+        self.char.render(canvas, data, self.angle, self.gameCube)

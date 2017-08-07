@@ -23,6 +23,8 @@ def mousePressed(event, data):
 def keyPressed(event, data):
     #All keyboard data stored in data.chars dictionary
     data.chars[event.char] = True
+    if(event.keysym == "Space"):
+        data.game.jumpChar()
 
 def keyRelease(event, data):
     data.chars[event.char] = False
@@ -35,8 +37,8 @@ def keyActions(data):
         data.game.movCam(Angle(0,1,0))
     if(data.chars['s']):
         data.game.movCam(Angle(-1,0,0))
-    if(data.chars['d']): pass
-        #data.game.movCam(Angle(0,-1,0))
+    if(data.chars['d']):
+        data.game.movCam(Angle(0,-1,0))
 
 def timerFired(data):
     keyActions(data)

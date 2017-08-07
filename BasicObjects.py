@@ -110,11 +110,13 @@ class Line(object):
         self.p1.rotate(angle, center)
         self.p2.rotate(angle, center)
 
-    def render(self, canvas, data, angle, center, gameCube):
+    def render(self, canvas, data, angle, pos, gameCube):
         if (self.p1.isCollision(gameCube) or self.p2.isCollision(gameCube)):
             return
         p1 = copy.copy(self.p1)
         p2 = copy.copy(self.p2)
+        p1 += pos
+        p2 += pos
         p1.rotate(angle,Point(0))
         p2.rotate(angle,Point(0))
         canvas.create_line(
