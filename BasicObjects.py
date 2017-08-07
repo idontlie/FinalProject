@@ -22,7 +22,7 @@ class Vector(object):
     def __imul__(self,other):
         self.x *= other
         self.y *= other
-        self.y *= other
+        self.z *= other
         return self
     def __truediv__(self, other):
         return Vector(self.x / other,
@@ -89,6 +89,15 @@ class Point(Vector):
             return (ymag * math.sin(r)) + (xmag * math.cos(r))
     def isCollision(self, obj):
         return obj.isInside(self)
+    #axis is a string that contains x, y, z , or any combination of those
+    def keepIn(self, bounds, axis):
+        if "x" in axis:
+            self.x = ((self.x+bounds)%(2*bounds))-bounds
+        if "y" in axis:
+            self.y = ((self.y+bounds)%(2*bounds))-bounds
+        if "z" in axis:
+            self.z = ((self.z+bounds)%(2*bounds))-bounds
+
 class Line(object):
     def __init__(self, p1, p2, color):
         self.p1 = p1
@@ -119,6 +128,9 @@ class Line(object):
         if(self.p1.isCollision(obj)): return True
         if(self.p2.isCollision(obj)): return True
         return False
+    def keepIn(self, bounds, axis):
+        self.p1.keepIn(bounds, axis)
+        self.p2.keepIn(bounds, axis)
 #Testing
 a = Angle(0,0,0)
 b = Angle(1,2,3)

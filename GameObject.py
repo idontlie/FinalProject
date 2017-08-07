@@ -14,13 +14,12 @@ class GameObject(object):
         #Build the main game Cube
         #The entire game is rendered inside of this cube
         size = 300 #gameCube size constant
-        self.gameCube = Cube(Point(0),size,"green")
+        self.gameCube = GameCube(size,"green")
         self.ground = size-(size/5) #how far the terrain is from the cube
         self.visibleItems.append(
             Character(Point(self.ground,0,-200),20,"White")
             )
         devisions = 7 #terrain devisions (/2)
-
         self.addTerrain(size, self.ground, devisions, "green")
 
     def addCube(self, center, size, color, width = 1):
@@ -37,15 +36,16 @@ class GameObject(object):
 
     #MODEL FUNCTIONS:
     def moveChar(self, vector):
-        self.pos += vector
+        self.vel += vector
+
     def update(self):
+        self.pos += self.vel/100
+        self.vel *= self.friction
         self.angle += self.rotVels/200
         self.rotVels *= self.rotFriction
         for i in range(len(self.visibleItems)):
             if(self.visibleItems[i].isMovable == True):
                 self.visibleItems[i].move(self.vel, self.gameCube)
-
-
 
     #VIEW FUNCTIONS:
     def render(self, canvas, data):

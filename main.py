@@ -29,8 +29,8 @@ def keyRelease(event, data):
 
 def keyActions(data):
     if(data.chars['w']):
-        data.game.movCam(Angle(1,0,0))
-        #data.game.moveChar(Vector(1,0,0))
+        #data.game.movCam(Angle(1,0,0))
+        data.game.moveChar(Vector(0,0,-1))
     if(data.chars['a']):
         data.game.movCam(Angle(0,1,0))
     if(data.chars['s']):
@@ -78,6 +78,7 @@ def run(width=300, height=300):
     def timerFiredWrapper(canvas, data):
         timerFired(data)
         redrawAllWrapper(canvas, data)
+
         # pause, then call timerFired again
         canvas.after(data.timerDelay, timerFiredWrapper, canvas, data)
 
@@ -86,7 +87,7 @@ def run(width=300, height=300):
     data = Struct()
     data.width = width
     data.height = height
-    data.timerDelay = 10 # milliseconds
+    data.timerDelay = 0 # milliseconds
     init(data)
     # create the root and the canvas
     root = Tk()
