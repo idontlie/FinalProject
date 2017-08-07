@@ -1,0 +1,18 @@
+7/30-8/1
+	4 Hours:	Wrote 3D engine
+8/1	
+	2 Hours:	designed OOP structure
+8/2	
+	3 Hours:	Attempted to add perspective and cameras 
+8/3 	
+	2 Hours:	Proposal/Competitive Analysis/Storyboard
+8/4	
+	3 Hours: 	Removed cameras and implemented OOP structure
+8/5
+	5 Hours:	Fixed bugs and implemented terrain and terrain movement
+8/6
+	5 Hours: 	Fixed terrain and movement, drew out OOP structures for enemy development
+8/7
+	6 Hours:	Added character movement and started development with enemies
+
+Total 30

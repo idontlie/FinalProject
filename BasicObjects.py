@@ -76,12 +76,12 @@ class Point(Vector):
         yroty = yrotx
         xroty = Point.compRot(xrot, zrotx, ry, "y")
         zroty = Point.compRot(xrot, zrotx, ry, "x")
-        s= Point(0,0,1000)
+        s= Point(0,0,600)
         dis = math.sqrt((xroty-s.x)**2+(yroty-s.y)**2+(zroty-s.z)**2)
-        s= 1000
-        self.x,self.y,self.z = xroty*(dis/s), yroty*(dis/s), zroty*(dis/s)
-        #self.x,self.y,self.z = xroty*(zroty+600)/600, yroty*(zroty+600)/600, zroty
-        #self.x,self.y,self.z = xroty, yroty, zroty without perspective
+        s= 600
+        #self.x,self.y,self.z = xroty/(dis/s), yroty/(dis/s), zroty*(dis/s)
+        self.x,self.y,self.z = xroty/((zroty+600)/600), yroty/((zroty+600)/600), zroty
+        #self.x,self.y,self.z = xroty, yroty, zroty #without perspective
     def compRot(ymag, xmag, r, type):
         if (type == "y"):
             return (ymag * math.cos(r)) - (xmag * math.sin(r))
