@@ -9,7 +9,7 @@ class TitleScreen(object):
         self.angle = Angle(0,0,0)
         self.startRad = 100
         self.startCount = 30
-        self.cube = Cube(Point(0), 400, "green")
+        self.cube = Cube(Point(0), 400, Colors.green)
 
     def update(self):
         if(randint(0,10)<3 and self.startCount > 0 ):

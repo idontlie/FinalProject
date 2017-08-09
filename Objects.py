@@ -24,7 +24,7 @@ class Lines(object):
 
 
 class Cube(Lines):
-    def __init__(self, pos, size, color = "green", width = 1):
+    def __init__(self, pos, size, color = Colors.green, width = 1):
         super().__init__(pos, True, width)
         #Creates all lines in a cube...
         #Probably a better way to do this, but, I'm not quite sure how.

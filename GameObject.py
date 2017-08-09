@@ -25,7 +25,7 @@ class GameObject(object):
         self.visibleItems.append(StarField(10000,400))
         self.ground = size-(size/5) #how far the terrain is from the cube
         devisions = 5 #terrain devisions
-        self.addTerrain(size, self.ground, devisions, "red","red")
+        self.addTerrain(size, self.ground, devisions, Colors.red,Colors.red)
         charSize = 20
 
         self.char = Character(
@@ -69,12 +69,11 @@ class GameObject(object):
         self.pos += self.vel/100
         self.vel *= self.friction
 
-        self.angle += self.rotVels/200
+        self.angle += self.rotVels/300
         self.rotVels *= self.rotFriction
 
         #do character physics:
         self.char.update()
-
         for i in reversed(range(len(self.visibleItems))):
             #move movable items
             if(self.visibleItems[i].isMovable == True):
@@ -85,6 +84,10 @@ class GameObject(object):
                     if(self.visibleItems[i].isCubeCollision(self.char)):
                         del self.visibleItems[i]
                         self.health-= 1
+                        self.score-= 1
+                    elif(self.visibleItems[i].pos.z + 10 < -self.gameCube.size):
+                        del self.visibleItems[i]
+                        self.score += 100
 
     #VIEW FUNCTIONS:
     def render(self, canvas, data):

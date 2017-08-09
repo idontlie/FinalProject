@@ -11,6 +11,8 @@ import UI
 
 #model
 def init(data):
+    data.mousePressed = False
+    data.mouseX, data.mouseY = 0,0
     data.isTitleScreen = True
     data.isPaused = False
     data.isGameOver = False
@@ -24,8 +26,12 @@ def init(data):
         data.chars[i] = False
 #controller
 def mousePressed(event, data):
-    pass #TODO: Create mai n menu screen as well as a paused screen
-
+    data.mousePressed = True
+def mouseReleased(event, data):
+    data.mousePressed = False
+def mouseMoved(event, data):
+    data.mouseX = event.x
+    data.mouseY = event.y
 def keyPressed(event, data):
     #All keyboard data stored in data.chars dictionary
     data.chars[event.char.lower()] = True
@@ -39,24 +45,44 @@ def keyRelease(event, data):
 
 def keyActions(data):
 
-    if(data.chars['w']):
-        #data.game.movCam(Angle(1,0,0))
-        pass
+    #CHARACTER MOTION INPUT
     if(data.chars['a']):
-        #data.game.movCam(Angle(0,1,0))
         data.game.moveChar(Vector(0,2,0))
-    if(data.chars['s']):
-        data.game.movCam(Angle(0,1,0))
     if(data.chars['d']):
         data.game.moveChar(Vector(0,-2,0))
 
+    #CAMERA MOTION KEYBOARD INPUT
+    if(data.chars['i']):
+        data.game.movCam(Angle(0,0,1))
+    if(data.chars['j']):
+        data.game.movCam(Angle(0,1,0))
+    if(data.chars['k']):
+        data.game.movCam(Angle(0,0,-1))
+    if(data.chars['l']):
+        data.game.movCam(Angle(0,-1,0))
+
+
+
+    #RESET GAME INPUT
+    if(data.chars['r']):
+        data.game.reset()
+        data.game.moveChar(Vector(0,-2,0))
+        data.isGameOver = False
 def timerFired(data):
+    data.time +=1
     keyActions(data)
     if(data.isTitleScreen):
+        w = data.width
+        h = data.height
         data.titleScreen.update()
+        if(data.mousePressed and data.mouseX > w-750 and\
+                data.mouseY > h - 410 and data.mouseY < (h - 410) + 116):
+            data.isTitleScreen = False
     if(not data.isGameOver and not data.isTitleScreen and not data.isPaused):
         data.game.moveChar(Vector(0,0,-2))
         data.game.update()
+        if(data.game.health<0):
+            data.isGameOver = True
 
 
 #view
@@ -64,7 +90,12 @@ def redrawAll(canvas, data):
     clear(canvas, data)
     if(data.isTitleScreen):
         data.titleScreen.render(canvas, data)
-    if(not data.isGameOver and not data.isTitleScreen):
+    elif(data.isGameOver):
+        UI.renderGameOVR(canvas, data, data.game.score)
+    elif(data.isPaused):
+        pass
+    else:
+        #render game
         data.game.render(canvas, data)
         UI.renderHUD( #Heads up display for score, health, etc
             canvas, data,
@@ -86,10 +117,13 @@ def run(width=300, height=300):
         redrawAll(canvas, data)
         canvas.update()
 
+    def mouseReleasedWrapper(event, canvas, data):
+        mouseReleased(event, data)
     def mousePressedWrapper(event, canvas, data):
         mousePressed(event, data)
-        redrawAllWrapper(canvas, data)
-
+    def mouseMovedWrapper(event, canvas, data):
+        mouseMoved(event, data)
+        #redrawAllWrapper(canvas, data)
     def keyPressedWrapper(event, canvas, data):
         keyPressed(event, data)
         #redrawAllWrapper(canvas, data) Don't uncomment this. It crashes
@@ -109,7 +143,7 @@ def run(width=300, height=300):
     data = Struct()
     data.width = width
     data.height = height
-    data.timerDelay = 0 # milliseconds
+    data.timerDelay = 10 # milliseconds
     init(data)
     # create the root and the canvas
     root = Tk()
@@ -118,6 +152,10 @@ def run(width=300, height=300):
     # set up events
     root.bind("<Button-1>", lambda event:
                             mousePressedWrapper(event, canvas, data))
+    root.bind("<ButtonRelease-1>", lambda event:
+                            mouseReleasedWrapper(event, canvas, data))
+    root.bind("<Motion>", lambda event:
+                            mouseMovedWrapper(event, canvas, data))
     root.bind("<KeyPress>", lambda event:
                             keyPressedWrapper(event, canvas, data))
     root.bind("<KeyRelease>", lambda event:

@@ -52,6 +52,8 @@ class Angle(object):
         self.rx= rx
         self.ry= ry
         self.rz= rz
+    def sum(self):
+        return self.rx + self.ry + self.rz
     def rot(rx,ry,rz):
         self.rx+=rx
         self.ry+=ry

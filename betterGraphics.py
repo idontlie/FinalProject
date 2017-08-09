@@ -30,6 +30,6 @@ def betterTextTitle(canvas, x,y, text, fill, size):
     fill = "white", anchor = "nw")
 
 class Colors(object):
-    red = "ff0000"
-    green = "00ff00"
-    blue = "0000ff"
+    red = "#ff0000"
+    green = "#00ff00"
+    blue = "#0000ff"
