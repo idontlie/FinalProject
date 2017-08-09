@@ -10,6 +10,7 @@ class GameObject(object):
         #angle vars
         self.angle = Angle(0,0,0)
         self.rotVels = Angle(0,0,0) #velocity of rotation for each axis
+
         self.rotFriction = .85 #friction coefficient
         #position vars
         self.pos = Point(0,0)
@@ -43,7 +44,7 @@ class GameObject(object):
             Terrain(size, lowerCoord, gridDevisions, color, width)
         )
     def createEnemy(self):
-        s = 30
+        s = randint(10,50)
         self.visibleItems.append(
             Enemy(
                 Point(
@@ -56,6 +57,8 @@ class GameObject(object):
         )
     #CAMERA FUNCTIONS
     def movCam(self, angle):
+        #increase speed as score increases
+        angle *= (1+(self.score/10000))
         self.rotVels += angle
 
     #MODEL FUNCTIONS:
@@ -68,10 +71,13 @@ class GameObject(object):
         #do physics:
         self.pos += self.vel/100
         self.vel *= self.friction
-
+        #angle physics
         self.angle += self.rotVels/300
         self.rotVels *= self.rotFriction
 
+        #spawn enemies:
+        if(randint(0,100)<(2+self.score/1000)):
+            self.createEnemy()
         #do character physics:
         self.char.update()
         for i in reversed(range(len(self.visibleItems))):
@@ -87,7 +93,7 @@ class GameObject(object):
                         self.score-= 1
                     elif(self.visibleItems[i].pos.z + 10 < -self.gameCube.size):
                         del self.visibleItems[i]
-                        self.score += 100
+                        self.score +=  int(100*((self.rotVels.sum()/10)+.5))
 
     #VIEW FUNCTIONS:
     def render(self, canvas, data):

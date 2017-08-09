@@ -70,7 +70,7 @@ class TitleScreen(object):
         betterRect(canvas,
         min(-10, time - 750), 150, 750, 140, "black", "gray75")
         betterTextTitle(canvas,
-        min(100, time - 650), 150, "INSIDE_THE_BOX", "white", 100)
+        min(100, time - 650), 150, "INSIDE_THE_BOX_", "white", 100)
 
         if(time % 10 < 5 or not animation):
             betterRect(canvas,
@@ -82,7 +82,9 @@ class TitleScreen(object):
             max(w - 750, w-time) , h - 410, 750, 116, "#303030", "gray75")
             betterText(canvas,
             max(w - 700, w-time+50), h - 400, "START_GAME", "#00ff00", 59)
-
+        betterText(
+            canvas, 300, max(700,h-(time/4)), "press h for help", "white", 30
+        )
 class Particle(object):
     def __init__(self, point, vector, radius):
         self.pos = point

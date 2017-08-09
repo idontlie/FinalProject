@@ -76,7 +76,9 @@ class Character(Cube):
             self.canJump = True
             self.pos.x = self.minPos
     def jump(self):
-        self.vel = Character.jumpHeight
+        if(self.canJump):
+            self.vel = Character.jumpHeight
+        self.canJump = False
 class Enemy(Cube):
     def __init__(self, startLoc, size, motion, color = "red"):
         super().__init__(startLoc, size, color)

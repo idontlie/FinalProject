@@ -13,8 +13,10 @@ import UI
 def init(data):
     data.mousePressed = False
     data.mouseX, data.mouseY = 0,0
+    data.mouseTime = 0
     data.isTitleScreen = True
     data.isPaused = False
+    data.isHelp = False
     data.isGameOver = False
     data.titleScreen = TitleScreen()
     data.CX = data.width//2
@@ -30,15 +32,21 @@ def mousePressed(event, data):
 def mouseReleased(event, data):
     data.mousePressed = False
 def mouseMoved(event, data):
+    data.mouseTime = 0
     data.mouseX = event.x
     data.mouseY = event.y
 def keyPressed(event, data):
     #All keyboard data stored in data.chars dictionary
-    data.chars[event.char.lower()] = True
-    if(event.char == " "):
+    char = event.char.lower()
+    data.chars[char] = True
+    if(char == " "):
         data.game.jumpChar()
-    if(event.char == "z"):
+    if(char == "z"):
         data.game.createEnemy()
+    if(char == "p"):
+        data.isPaused = not data.isPaused
+    if(char == "h"):
+        data.isHelp = not data.isHelp
 
 def keyRelease(event, data):
     data.chars[event.char.lower()] = False
@@ -61,15 +69,14 @@ def keyActions(data):
     if(data.chars['l']):
         data.game.movCam(Angle(0,-1,0))
 
-
-
     #RESET GAME INPUT
     if(data.chars['r']):
         data.game.reset()
         data.game.moveChar(Vector(0,-2,0))
         data.isGameOver = False
 def timerFired(data):
-    data.time +=1
+    data.mouseTime += 1
+    data.time += 1
     keyActions(data)
     if(data.isTitleScreen):
         w = data.width
@@ -78,7 +85,7 @@ def timerFired(data):
         if(data.mousePressed and data.mouseX > w-750 and\
                 data.mouseY > h - 410 and data.mouseY < (h - 410) + 116):
             data.isTitleScreen = False
-    if(not data.isGameOver and not data.isTitleScreen and not data.isPaused):
+    if(not data.isGameOver and not data.isTitleScreen and not data.isPaused and not data.isHelp):
         data.game.moveChar(Vector(0,0,-2))
         data.game.update()
         if(data.game.health<0):
@@ -88,12 +95,14 @@ def timerFired(data):
 #view
 def redrawAll(canvas, data):
     clear(canvas, data)
-    if(data.isTitleScreen):
+    if(data.isTitleScreen and not data.isHelp):
         data.titleScreen.render(canvas, data)
     elif(data.isGameOver):
         UI.renderGameOVR(canvas, data, data.game.score)
     elif(data.isPaused):
-        pass
+        UI.renderPaused(canvas, data)
+    elif(data.isHelp):
+        UI.renderHelp(canvas, data)
     else:
         #render game
         data.game.render(canvas, data)

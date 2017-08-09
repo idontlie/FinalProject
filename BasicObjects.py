@@ -53,7 +53,8 @@ class Angle(object):
         self.ry= ry
         self.rz= rz
     def sum(self):
-        return self.rx + self.ry + self.rz
+        s = self
+        return abs(s.rx) + abs(s.ry) + abs(s.rz)
     def rot(rx,ry,rz):
         self.rx+=rx
         self.ry+=ry
@@ -73,6 +74,12 @@ class Angle(object):
         self.ry *= other
         self.rz *= other
         return self
+    def __mul__(self,other):
+        return Angle(
+        self.rx * other,
+        self.ry * other,
+        self.rz * other)
+
     def __truediv__(self, other):
         return Angle(
         self.rx / other,
@@ -102,6 +109,7 @@ class Point(Vector):
         xroty = Point.compRot(xrot, zrotx, ry, "y")
         zroty = Point.compRot(xrot, zrotx, ry, "x")
         s= Point(0,0,600)
+        #uncomment some of this shit to use cool warped cameras
         #dis = math.sqrt((xroty-s.x)**2+(yroty-s.y)**2+(zroty-s.z)**2)
         s= 600
         #self.x,self.y,self.z = xroty/(dis/s), yroty/(dis/s), zroty*(dis/s)
