@@ -1,6 +1,7 @@
 import math
 import copy
 from random import randint
+from betterGraphics import *
 class Vector(object):
     def __init__(self, x= 0,y =0 ,z = 0):
         self.x = x
@@ -27,6 +28,20 @@ class Vector(object):
         self.x *= other
         self.y *= other
         self.z *= other
+        return self
+    def __mul__(self,other):
+        if(isinstance(self,Point)):
+            return Point(self.x * other.x,
+            self.y * other.y,
+            self.z * other.z)
+        if(isinstance(other, int)):
+            return Vector(self.x * other,
+            self.y * other,
+            self.z * other)
+        else:
+            return Vector(self.x * other.x,
+            self.y * other.y,
+            self.z * other.z)
         return self
     def __truediv__(self, other):
         return Vector(self.x / other,
@@ -88,7 +103,7 @@ class Point(Vector):
         #dis = math.sqrt((xroty-s.x)**2+(yroty-s.y)**2+(zroty-s.z)**2)
         s= 600
         #self.x,self.y,self.z = xroty/(dis/s), yroty/(dis/s), zroty*(dis/s)
-        self.x,self.y,self.z = xroty/(1+(zroty+300)/300), yroty/(1+(zroty+300)/300), zroty
+        self.x,self.y,self.z = xroty/(1+(zroty+400)/500), yroty/(1+(zroty+400)/500), zroty
         #self.x,self.y,self.z = xroty, yroty, zroty #without perspective
     def compRot(ymag, xmag, r, type):
         if (type == "y"):
@@ -108,7 +123,8 @@ class Point(Vector):
     def render(self, canvas, data, angle, radius, fill = "white"):
         p = copy.copy(self)
         p.rotate(angle, Point(0))
-        #betterCircle(canvas, p.x, p.y, radius, fill)
+
+        betterSquare(canvas, p.x + data.CX, p.y + data.CY, radius, fill)
 class Line(object):
     def __init__(self, p1, p2, color):
         self.p1 = p1
@@ -127,13 +143,11 @@ class Line(object):
         p2 += pos
         p1.rotate(angle,Point(0))
         p2.rotate(angle,Point(0))
-        canvas.create_line(
-        (p1.x) + data.CX,
-         (p1.y) + data.CY,
-          (p2.x) + data.CX,
-           (p2.y) + data.CY,
-           fill = self.color,
-           width = width
+        betterLine(canvas,
+            (p1.x) + data.CX, (p1.y) + data.CY,
+            (p2.x) + data.CX, (p2.y) + data.CY,
+            fill = self.color,
+            width = width
            )
     #Randomly chooses between anyCollision or isCollision
     #also adds a bit of jitter to the line position

@@ -11,7 +11,7 @@ import UI
 
 #model
 def init(data):
-    data.isTitleScreen = False
+    data.isTitleScreen = True
     data.isPaused = False
     data.isGameOver = False
     data.titleScreen = TitleScreen()
@@ -22,7 +22,6 @@ def init(data):
     data.chars = {"a":False,"d":False}
     for i in string.printable:
         data.chars[i] = False
-
 #controller
 def mousePressed(event, data):
     pass #TODO: Create mai n menu screen as well as a paused screen

@@ -1,5 +1,6 @@
 from Objects import *
 from random import randint
+from betterGraphics import Colors
 class GameObject(object):
     def __init__(self):
         #Game Stats:
@@ -20,7 +21,8 @@ class GameObject(object):
         #The entire game is rendered inside of this cube
         self.size = 300 #gameCube size constant
         size = self.size
-        self.gameCube = GameCube(size,"green")
+        self.gameCube = GameCube(size, Colors.green)
+        self.visibleItems.append(StarField(10000,400))
         self.ground = size-(size/5) #how far the terrain is from the cube
         devisions = 5 #terrain devisions
         self.addTerrain(size, self.ground, devisions, "red","red")

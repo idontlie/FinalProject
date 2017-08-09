@@ -1,6 +1,7 @@
 from BasicObjects import *
-#all objects in this class are subclasses of the "Lines" object
+#most of the objects in this module are subclasses of the "Lines" object
 #this is because all ingame objects are really all just a collection of lines
+#The exceptions being the star field, and title screen
 class Lines(object):
     def __init__(self, pos, isMovable, width):
         self.pos = pos
@@ -15,7 +16,7 @@ class Lines(object):
     def rotate():
         for l in self.linesList:
             l.rotateAboutCenter
-    def render(self, canvas, data, angle, gameCube):
+    def render(self, canvas, data, angle, gameCube = None):
         for l in self.linesList:
             l.render(canvas, data, angle, self.pos)
     def setAngle(self,angle):
@@ -80,7 +81,7 @@ class Enemy(Cube):
     def __init__(self, startLoc, size, motion, color = "red"):
         super().__init__(startLoc, size, color)
         self.motion = motion
-    def render(self, canvas, data, angle, gameCube):
+    def render(self, canvas, data, angle, gameCube = None):
         #print (len(self.linesList))
         for l in self.linesList:
             if(l.isRandCollision(gameCube, self.pos)):
@@ -89,7 +90,7 @@ class Enemy(Cube):
 class GameCube(Cube):
     def __init__(self, size, color, width = 1):
         super().__init__(Point(0), size, color, width)
-    def render(self, canvas, data, angle, gameCube):
+    def render(self, canvas, data, angle, gameCube = None):
         for l in self.linesList:
             l.render(canvas, data, angle, self.pos)
 
@@ -123,3 +124,24 @@ class Terrain(Lines):
                 self.linesList[i].move(Vector(0,vector.y,0))
                 if(not self.linesList[i].isCollision(gameCube)):
                     self.linesList[i].keepIn(gameCube.size, "y")
+class StarField(object):
+    def __init__(self, bounds, pointcount):
+        self.pos = Point(0)
+        self.isMovable = True
+        self.points = []
+        for i in range(pointcount):
+            x = randint(-bounds,bounds)
+            y = randint(-bounds,bounds)
+            z = randint(-bounds,bounds)
+            self.points.append(Point(x,y,z))
+        self.bounds = bounds
+    #gameCube must be an argument even if not needed to keep the modular nature
+    #of the game object class. Without it, starfields could not be added to the
+    #visible items list
+    def move(self, vector, gameCube = None):
+        for i in range(len(self.points)):
+            self.points[i] += vector*4
+            self.points[i].keepIn(self.bounds, "xyz")
+    def render(self, canvas, data, angle, gameCube = None):
+        for i in self.points:
+            i.render(canvas, data, angle, 2, "white")
