@@ -4,10 +4,17 @@ import string
 import time
 from Objects import *
 from GameObject import *
+from TitleSequence import*
 from tkinter import *
+import UI
+#tkinter MVC framework stolen from 15112 course website
 
 #model
 def init(data):
+    data.isTitleScreen = False
+    data.isPaused = False
+    data.isGameOver = False
+    data.titleScreen = TitleScreen()
     data.CX = data.width//2
     data.CY = data.height//2
     data.time = 0
@@ -22,36 +29,48 @@ def mousePressed(event, data):
 
 def keyPressed(event, data):
     #All keyboard data stored in data.chars dictionary
-    data.chars[event.char] = True
+    data.chars[event.char.lower()] = True
     if(event.char == " "):
         data.game.jumpChar()
     if(event.char == "z"):
         data.game.createEnemy()
 
 def keyRelease(event, data):
-    data.chars[event.char] = False
+    data.chars[event.char.lower()] = False
 
 def keyActions(data):
+
     if(data.chars['w']):
         #data.game.movCam(Angle(1,0,0))
-        data.game.moveChar(Vector(0,0,-1))
+        pass
     if(data.chars['a']):
-        data.game.movCam(Angle(0,1,0))
+        #data.game.movCam(Angle(0,1,0))
+        data.game.moveChar(Vector(0,2,0))
     if(data.chars['s']):
-        data.game.movCam(Angle(-1,0,0))
+        data.game.movCam(Angle(0,1,0))
     if(data.chars['d']):
-        data.game.movCam(Angle(0,-1,0))
+        data.game.moveChar(Vector(0,-2,0))
 
 def timerFired(data):
     keyActions(data)
-    data.game.update()
+    if(data.isTitleScreen):
+        data.titleScreen.update()
+    if(not data.isGameOver and not data.isTitleScreen and not data.isPaused):
+        data.game.moveChar(Vector(0,0,-2))
+        data.game.update()
 
 
 #view
 def redrawAll(canvas, data):
     clear(canvas, data)
-    data.game.render(canvas, data)
-
+    if(data.isTitleScreen):
+        data.titleScreen.render(canvas, data)
+    if(not data.isGameOver and not data.isTitleScreen):
+        data.game.render(canvas, data)
+        UI.renderHUD( #Heads up display for score, health, etc
+            canvas, data,
+            data.game.health, data.game.score
+        )
 def clear(canvas,data):
     canvas.create_rectangle(0,0,data.width, data.height, fill = "black")
 
